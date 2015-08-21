@@ -16,18 +16,19 @@
 @property (nonatomic, assign) APContactField fieldsMask;
 @property (nonatomic, copy) APContactFilterBlock filterBlock;
 @property (nonatomic, strong) NSArray *sortDescriptors;
+@property (assign, nonatomic) BOOL mergeLinkedContacts;
 
 + (APAddressBookAccess)access;
-+ (void)requestAccess:(void (^)(BOOL granted, NSError * error))completionBlock;
++ (void)               requestAccess:(void (^)(BOOL granted, NSError *error))completionBlock;
 + (void)requestAccessOnQueue:(dispatch_queue_t)queue
-                  completion:(void (^)(BOOL granted, NSError * error))completionBlock;
+                  completion:(void (^)(BOOL granted, NSError *error))completionBlock;
 
 - (void)loadContacts:(void (^)(NSArray *contacts, NSError *error))completionBlock;
 - (void)loadContactsOnQueue:(dispatch_queue_t)queue
                  completion:(void (^)(NSArray *contacts, NSError *error))completionBlock;
 
 - (void)startObserveChangesWithCallback:(void (^)())callback;
-- (void)stopObserveChanges;
+- (void)               stopObserveChanges;
 
 - (APContact *)getContactByRecordID:(NSNumber *)recordID;
 
