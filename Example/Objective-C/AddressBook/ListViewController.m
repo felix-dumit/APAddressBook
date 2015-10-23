@@ -26,6 +26,7 @@
     if (self)
     {
         self.addressBook = [[APAddressBook alloc] init];
+        self.addressBook.mergeLinkedContacts = YES;
         __weak typeof(self) weakSelf = self;
         [self.addressBook startObserveChangesWithCallback:^
         {

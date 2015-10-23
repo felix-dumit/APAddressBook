@@ -32,6 +32,7 @@
     self = [super init];
     self.fieldsMask = APContactFieldDefault;
     self.thread = [[APThread alloc] init];
+    self.mergeLinkedContacts = NO;
     [self.thread start];
     [self.thread dispatchAsync:^
     {
@@ -74,6 +75,9 @@
     APContactListBuilder *listBuilder = [[APContactListBuilder alloc] init];
     listBuilder.filterBlock = self.filterBlock;
     listBuilder.sortDescriptors = self.sortDescriptors;
+    listBuilder.mergeLinkedContacts = self.mergeLinkedContacts;
+    listBuilder.contacts = self.contacts;
+    listBuilder.fieldsMask = self.fieldsMask;
     [self.thread dispatchAsync:^
     {
         [self.access requestAccessWithCompletion:^(BOOL granted, NSError *error)

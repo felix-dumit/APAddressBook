@@ -36,4 +36,7 @@
 @property (nullable, nonatomic, strong) APSource *source;
 @property (nullable, nonatomic, strong) APRecordDate *recordDate;
 
+
+- (void)mergeWith:(nullable APContact *)contact;
+
 @end
