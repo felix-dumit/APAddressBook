@@ -13,20 +13,22 @@
 
 @interface ListViewController ()
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;
+@property (nonatomic, strong) APAddressBook *addressBook;
 @end
 
 @implementation ListViewController
 
 #pragma mark - life cycle
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self)
     {
-        addressBook = [[APAddressBook alloc] init];
+        self.addressBook = [[APAddressBook alloc] init];
         __weak typeof(self) weakSelf = self;
-        [addressBook startObserveChangesWithCallback:^{
+        [self.addressBook startObserveChangesWithCallback:^
+        {
             [weakSelf loadContacts];
         }];
     }
@@ -74,22 +76,21 @@
     [self.memoryStorage removeAllTableItems];
     [self.activity startAnimating];
     __weak __typeof(self) weakSelf = self;
-    addressBook.fieldsMask = APContactFieldAll;
-    addressBook.sortDescriptors = @[
-     [NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES],
-     [NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES]];
-    addressBook.filterBlock = ^BOOL(APContact *contact)
+    self.addressBook.fieldsMask = APContactFieldAll;
+    self.addressBook.sortDescriptors = @[
+     [NSSortDescriptor sortDescriptorWithKey:@"name.firstName" ascending:YES],
+     [NSSortDescriptor sortDescriptorWithKey:@"name.lastName" ascending:YES]];
+    self.addressBook.filterBlock = ^BOOL(APContact *contact)
     {
         return contact.phones.count > 0;
     };
-    [addressBook loadContacts:^(NSArray *contacts, NSError *error)
-    {
+    [self.addressBook loadContacts:^(NSArray<APContact *> *contacts, NSError *error) {
         [weakSelf.activity stopAnimating];
-        if (!error)
+        if (contacts)
         {
             [weakSelf.memoryStorage addTableItems:contacts];
         }
-        else
+        else if (error)
         {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
                                                                 message:error.localizedDescription
